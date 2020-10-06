@@ -1,13 +1,14 @@
-package hooks
+package events
 
 import (
 	"context"
 
-	"github.com/gomodule/redigo/redis"
-	"github.com/jmoiron/sqlx"
 	"github.com/nyaruka/goflow/flows"
 	"github.com/nyaruka/goflow/flows/events"
 	"github.com/nyaruka/mailroom/models"
+
+	"github.com/gomodule/redigo/redis"
+	"github.com/jmoiron/sqlx"
 )
 
 func init() {

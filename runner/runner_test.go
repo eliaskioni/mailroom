@@ -10,6 +10,7 @@ import (
 	"github.com/nyaruka/goflow/flows/resumes"
 	"github.com/nyaruka/goflow/flows/triggers"
 	_ "github.com/nyaruka/mailroom/hooks"
+	_ "github.com/nyaruka/mailroom/hooks/events"
 	"github.com/nyaruka/mailroom/models"
 	"github.com/nyaruka/mailroom/testsuite"
 	"github.com/nyaruka/mailroom/testsuite/testdata"

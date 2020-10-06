@@ -13,6 +13,7 @@ import (
 	"github.com/nyaruka/mailroom/config"
 
 	_ "github.com/nyaruka/mailroom/hooks"
+	_ "github.com/nyaruka/mailroom/hooks/events"
 	_ "github.com/nyaruka/mailroom/ivr/nexmo"
 	_ "github.com/nyaruka/mailroom/ivr/twiml"
 	_ "github.com/nyaruka/mailroom/services/tickets/mailgun"

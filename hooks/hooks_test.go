@@ -52,6 +52,10 @@ type SQLAssertion struct {
 	Count int
 }
 
+func NewActionUUID() flows.ActionUUID {
+	return newActionUUID()
+}
+
 func newActionUUID() flows.ActionUUID {
 	return flows.ActionUUID(uuids.New())
 }

@@ -14,6 +14,7 @@ import (
 	"github.com/nyaruka/goflow/test"
 	"github.com/nyaruka/mailroom/config"
 	_ "github.com/nyaruka/mailroom/hooks"
+	_ "github.com/nyaruka/mailroom/hooks/events"
 	"github.com/nyaruka/mailroom/models"
 	"github.com/nyaruka/mailroom/testsuite"
 	"github.com/nyaruka/mailroom/web"

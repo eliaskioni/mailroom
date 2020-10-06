@@ -7,6 +7,7 @@ import (
 	"github.com/nyaruka/mailroom"
 	"github.com/nyaruka/mailroom/config"
 	_ "github.com/nyaruka/mailroom/hooks"
+	_ "github.com/nyaruka/mailroom/hooks/events"
 	"github.com/nyaruka/mailroom/models"
 	"github.com/nyaruka/mailroom/testsuite"
 

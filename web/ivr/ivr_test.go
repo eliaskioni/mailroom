@@ -23,6 +23,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	_ "github.com/nyaruka/mailroom/hooks"
+	_ "github.com/nyaruka/mailroom/hooks/events"
 	"github.com/nyaruka/mailroom/ivr/nexmo"
 	"github.com/nyaruka/mailroom/ivr/twiml"
 	ivr_tasks "github.com/nyaruka/mailroom/tasks/ivr"
