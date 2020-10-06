@@ -8,7 +8,6 @@ import (
 	"github.com/nyaruka/goflow/flows"
 	"github.com/nyaruka/goflow/flows/actions"
 	"github.com/nyaruka/mailroom/hooks"
-	_ "github.com/nyaruka/mailroom/hooks/events"
 	"github.com/nyaruka/mailroom/models"
 	"github.com/nyaruka/mailroom/testsuite"
 
@@ -84,7 +83,7 @@ func TestAirtimeTransferred(t *testing.T) {
 		`UPDATE orgs_org SET config = '{"TRANSFERTO_ACCOUNT_LOGIN": "nyaruka", "TRANSFERTO_AIRTIME_API_TOKEN": "123456789"}'::jsonb
 		WHERE id = $1`, models.Org1)
 
-	tcs := []hooks.HookTestCase{
+	tcs := []hooks.TestCase{
 		{
 			Actions: hooks.ContactActionMap{
 				models.CathyID: []flows.Action{
@@ -125,5 +124,5 @@ func TestAirtimeTransferred(t *testing.T) {
 		},
 	}
 
-	hooks.RunHookTestCases(t, tcs)
+	hooks.RunTestCases(t, tcs)
 }
