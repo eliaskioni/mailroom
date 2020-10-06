@@ -1365,3 +1365,9 @@ const updateContactStatusSQL = `
 	WHERE
 		c.id = r.id::int
 `
+
+// DeleteContacts deletes the given contacts
+func DeleteContacts(ctx context.Context, db Queryer, userID UserID, contactIDs []ContactID) error {
+	// TODO
+	return nil
+}

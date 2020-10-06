@@ -64,3 +64,9 @@ func TestResolveContacts(t *testing.T) {
 
 	web.RunWebTests(t, "testdata/resolve.json")
 }
+
+func TestDeleteContacts(t *testing.T) {
+	testsuite.Reset()
+
+	web.RunWebTests(t, "testdata/delete.json")
+}

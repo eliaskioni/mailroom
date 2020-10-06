@@ -19,6 +19,7 @@ func init() {
 	web.RegisterJSONRoute(http.MethodPost, "/mr/contact/create", web.RequireAuthToken(handleCreate))
 	web.RegisterJSONRoute(http.MethodPost, "/mr/contact/modify", web.RequireAuthToken(handleModify))
 	web.RegisterJSONRoute(http.MethodPost, "/mr/contact/resolve", web.RequireAuthToken(handleResolve))
+	web.RegisterJSONRoute(http.MethodPost, "/mr/contact/delete", web.RequireAuthToken(handleDelete))
 }
 
 // Request to create a new contact.
@@ -218,4 +219,33 @@ func handleResolve(ctx context.Context, s *web.Server, r *http.Request) (interfa
 			"identity": urn.Identity(),
 		},
 	}, http.StatusOK, nil
+}
+
+// Request to delete contacts
+//
+//   {
+//     "org_id": 1,
+//     "user_id": 2,
+//     "contact_ids": [15, 235]
+//   }
+//
+type deleteRequest struct {
+	OrgID      models.OrgID       `json:"org_id"      validate:"required"`
+	UserID     models.UserID      `json:"user_id"     validate:"required"`
+	ContactIDs []models.ContactID `json:"contact_ids" validate:"required"`
+}
+
+// handles a request to delete contacts
+func handleDelete(ctx context.Context, s *web.Server, r *http.Request) (interface{}, int, error) {
+	request := &deleteRequest{}
+	if err := utils.UnmarshalAndValidateWithLimit(r.Body, request, web.MaxRequestBytes); err != nil {
+		return errors.Wrapf(err, "request failed validation"), http.StatusBadRequest, nil
+	}
+
+	models.DeleteContacts(ctx, s.DB, request.UserID, request.ContactIDs)
+	if err != nil {
+		return nil, http.StatusBadRequest, errors.Wrapf(err, "unable to delete contacts")
+	}
+
+	return nil, http.StatusOK, nil
 }

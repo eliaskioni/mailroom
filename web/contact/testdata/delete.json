@@ -1,0 +1,23 @@
+[
+    {
+        "label": "error if user not provided",
+        "method": "POST",
+        "path": "/mr/contact/delete",
+        "body": {
+            "org_id": 1,
+            "contact_ids": [
+                1
+            ]
+        },
+        "status": 400,
+        "response": {
+            "error": "request failed validation: field 'user_id' is required"
+        },
+        "db_assertions": [
+            {
+                "query": "SELECT count(*) FROM contacts_contact",
+                "count": 245
+            }
+        ]
+    }
+]
