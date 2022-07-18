@@ -1,7 +1,12 @@
 package goflow
 
 import (
+	"fmt"
+	"github.com/gomodule/redigo/redis"
+	"net/url"
+	"strings"
 	"sync"
+	"time"
 
 	"github.com/nyaruka/gocommon/urns"
 	"github.com/nyaruka/goflow/flows"
@@ -47,9 +52,30 @@ func RegisterAirtimeServiceFactory(f func(*runtime.Config) engine.AirtimeService
 // Engine returns the global engine instance for use with real sessions
 func Engine(c *runtime.Config) flows.Engine {
 	engInit.Do(func() {
+		redisURL, _ := url.Parse("redis://redis-service:6379/15")
+		redisPool := &redis.Pool{
+			Wait:        true,              // makes callers wait for a connection
+			MaxActive:   5,                 // only open this many concurrent connections at once
+			MaxIdle:     2,                 // only keep up to 2 idle
+			IdleTimeout: 240 * time.Second, // how long to wait before reaping a connection
+			Dial: func() (redis.Conn, error) {
+				conn, err := redis.Dial("tcp", redisURL.Host)
+				if err != nil {
+					return nil, err
+				}
+
+				// switch to the right DB
+				_, err = conn.Do("SELECT", strings.TrimLeft(redisURL.Path, "/"))
+				return conn, err
+			},
+		}
+
+		conn := redisPool.Get()
+		access_token, _ := redis.String(conn.Do("GET", "access_token"))
 		webhookHeaders := map[string]string{
 			"User-Agent":      "RapidProMailroom/" + c.Version,
 			"X-Mailroom-Mode": "normal",
+			"Authorisation": fmt.Sprintf("Bearer %s", access_token),
 		}
 
 		httpClient, httpRetries, httpAccess := HTTP(c)
@@ -71,10 +97,32 @@ func Engine(c *runtime.Config) flows.Engine {
 // Simulator returns the global engine instance for use with simulated sessions
 func Simulator(c *runtime.Config) flows.Engine {
 	simulatorInit.Do(func() {
+		redisURL, _ := url.Parse("redis://redis-service:6379/15")
+		redisPool := &redis.Pool{
+			Wait:        true,              // makes callers wait for a connection
+			MaxActive:   5,                 // only open this many concurrent connections at once
+			MaxIdle:     2,                 // only keep up to 2 idle
+			IdleTimeout: 240 * time.Second, // how long to wait before reaping a connection
+			Dial: func() (redis.Conn, error) {
+				conn, err := redis.Dial("tcp", redisURL.Host)
+				if err != nil {
+					return nil, err
+				}
+
+				// switch to the right DB
+				_, err = conn.Do("SELECT", strings.TrimLeft(redisURL.Path, "/"))
+				return conn, err
+			},
+		}
+
+		conn := redisPool.Get()
+		access_token, _ := redis.String(conn.Do("GET", "access_token"))
 		webhookHeaders := map[string]string{
 			"User-Agent":      "RapidProMailroom/" + c.Version,
 			"X-Mailroom-Mode": "simulation",
+			"Authorisation": fmt.Sprintf("Bearer %s", access_token),
 		}
+
 
 		httpClient, _, httpAccess := HTTP(c) // don't do retries in simulator
 
